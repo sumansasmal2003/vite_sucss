@@ -389,6 +389,47 @@ app.post('/api/notify', async (req, res) => {
   }
 });
 
+// New endpoint to handle account deactivation notifications
+app.post('/api/deactivate-account', async (req, res) => {
+  const { email, name, reason } = req.body;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Account Suspension Notice',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #333;">Dear ${name},</h2>
+        <p style="color: #555;">
+          We regret to inform you that your account has been suspended. The reason for this action is as follows:
+        </p>
+        <p style="color: #333; font-size: 16px;">
+          <strong>Reason:</strong> ${reason}
+        </p>
+        <p style="color: #555;">
+          If you believe this is a mistake or if you have any questions, please contact us at <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.
+        </p>
+        <p style="color: #555;">
+          We appreciate your attention to this matter.
+        </p>
+        <hr style="border: 1px solid #e0e0e0; margin-top: 20px; margin-bottom: 20px;" />
+        <p style="text-align: center; color: #999; font-size: 12px;">
+          © ${new Date().getFullYear()} SUCSS. All rights reserved.
+        </p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Account deactivation notification sent successfully.');
+  } catch (error) {
+    console.error('Error sending account deactivation notification:', error);
+    res.status(500).send('Error sending account deactivation notification.');
+  }
+});
+
+
 // Helper function to format dates
 function formatDate(date) {
   return new Date(date).toLocaleDateString('en-GB', {
