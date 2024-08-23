@@ -390,6 +390,7 @@ app.post('/api/notify', async (req, res) => {
 });
 
 // New endpoint to handle account deactivation notifications
+// New endpoint to handle account deactivation notifications
 app.post('/api/deactivate-account', async (req, res) => {
   const { email, name, reason } = req.body;
 
@@ -401,10 +402,13 @@ app.post('/api/deactivate-account', async (req, res) => {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
         <h2 style="color: #333;">Dear ${name},</h2>
         <p style="color: #555;">
-          We regret to inform you that your account has been suspended. The reason for this action is as follows:
+          We regret to inform you that your account has been suspended for a limited time period. The reason for this action is as follows:
         </p>
         <p style="color: #333; font-size: 16px;">
           <strong>Reason:</strong> ${reason}
+        </p>
+        <p style="color: #555;">
+          Whenever your account is reactivated, we will inform you via email.
         </p>
         <p style="color: #555;">
           If you believe this is a mistake or if you have any questions, please contact us at <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.
@@ -426,6 +430,43 @@ app.post('/api/deactivate-account', async (req, res) => {
   } catch (error) {
     console.error('Error sending account deactivation notification:', error);
     res.status(500).send('Error sending account deactivation notification.');
+  }
+});
+
+// New endpoint to handle account reactivation notifications
+app.post('/api/activate-account', async (req, res) => {
+  const { email, name } = req.body;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Account Reactivation Notice',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #333;">Dear ${name},</h2>
+        <p style="color: #555;">
+          We are pleased to inform you that your account has been reactivated. You can now log in and resume using our services.
+        </p>
+        <p style="color: #555;">
+          If you have any questions or need further assistance, please contact us at <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.
+        </p>
+        <p style="color: #555;">
+          We appreciate your continued trust in our service.
+        </p>
+        <hr style="border: 1px solid #e0e0e0; margin-top: 20px; margin-bottom: 20px;" />
+        <p style="text-align: center; color: #999; font-size: 12px;">
+          © ${new Date().getFullYear()} SUCSS. All rights reserved.
+        </p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Account reactivation notification sent successfully.');
+  } catch (error) {
+    console.error('Error sending account reactivation notification:', error);
+    res.status(500).send('Error sending account reactivation notification.');
   }
 });
 
