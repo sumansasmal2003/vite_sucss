@@ -470,6 +470,77 @@ app.post('/api/activate-account', async (req, res) => {
   }
 });
 
+// Endpoint to approve membership
+app.post('/api/approve-membership', async (req, res) => {
+  const { email, memberName, profilePicture, membershipCode } = req.body;
+
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Membership Approved',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #f4f4f4; padding: 20px; max-width: 600px; margin: auto; border-radius: 8px; border: 1px solid #ddd;">
+          <div style="text-align: center; padding-bottom: 20px;">
+            <h1 style="color: #28a745; margin-bottom: 10px;">Membership Approved</h1>
+            <p style="font-size: 18px; color: #666;">Congratulations, ${memberName}!</p>
+            <img src="${profilePicture}" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;"/>
+          </div>
+          <div style="padding: 10px 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <p style="margin: 5px 0;">Your membership application has been approved. You are now officially a member.</p>
+            <p style="margin: 5px 0;"><strong>Membership Code:</strong> ${membershipCode}</p>
+          </div>
+          <div style="text-align: center; padding-top: 20px;">
+            <p style="font-size: 14px; color: #999;">Thank you for your patience and welcome to the community!</p>
+            <p style="font-size: 14px; color: #999;">If you have any questions, feel free to contact us at <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #28a745;">sijgeriaucssangha@gmail.com</a>.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Membership approval email sent successfully.');
+  } catch (error) {
+    console.error('Error sending approval email:', error);
+    res.status(500).send('Error sending approval email.');
+  }
+});
+
+// Endpoint to decline membership
+app.post('/api/decline-membership', async (req, res) => {
+  const { email, memberName, profilePicture } = req.body;
+
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Membership Declined',
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; background-color: #f4f4f4; padding: 20px; max-width: 600px; margin: auto; border-radius: 8px; border: 1px solid #ddd;">
+          <div style="text-align: center; padding-bottom: 20px;">
+            <h1 style="color: #dc3545; margin-bottom: 10px;">Membership Declined</h1>
+            <p style="font-size: 18px; color: #666;">Dear ${memberName},</p>
+            <img src="${profilePicture}" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;"/>
+          </div>
+          <div style="padding: 10px 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <p style="margin: 5px 0;">We regret to inform you that your membership application has been declined.</p>
+            <p style="margin: 5px 0;">If you have any questions or wish to reapply, please contact us at <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #dc3545;">sijgeriaucssangha@gmail.com</a>.</p>
+          </div>
+          <div style="text-align: center; padding-top: 20px;">
+            <p style="font-size: 14px; color: #999;">Thank you for your interest.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Membership decline email sent successfully.');
+  } catch (error) {
+    console.error('Error sending decline email:', error);
+    res.status(500).send('Error sending decline email.');
+  }
+});
+
 
 // Helper function to format dates
 function formatDate(date) {
