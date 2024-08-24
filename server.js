@@ -472,7 +472,7 @@ app.post('/api/activate-account', async (req, res) => {
 
 // Endpoint to approve membership
 app.post('/api/approve-membership', async (req, res) => {
-  const { email, memberName, profilePicture, membershipCode } = req.body;
+  const { email, name, photoUrl, membershipCode } = req.body;
 
   try {
     const mailOptions = {
@@ -508,7 +508,7 @@ app.post('/api/approve-membership', async (req, res) => {
 
 // Endpoint to decline membership
 app.post('/api/decline-membership', async (req, res) => {
-  const { email, memberName, profilePicture } = req.body;
+  const { email, name, photoUrl } = req.body;
 
   try {
     const mailOptions = {
