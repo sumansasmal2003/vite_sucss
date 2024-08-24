@@ -483,8 +483,8 @@ app.post('/api/approve-membership', async (req, res) => {
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #f4f4f4; padding: 20px; max-width: 600px; margin: auto; border-radius: 8px; border: 1px solid #ddd;">
           <div style="text-align: center; padding-bottom: 20px;">
             <h1 style="color: #28a745; margin-bottom: 10px;">Membership Approved</h1>
-            <p style="font-size: 18px; color: #666;">Congratulations, ${memberName}!</p>
-            <img src="${profilePicture}" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;"/>
+            <p style="font-size: 18px; color: #666;">Congratulations, ${name}!</p>
+            <img src="${photoUrl}" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;"/>
           </div>
           <div style="padding: 10px 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <p style="margin: 5px 0;">Your membership application has been approved. You are now officially a member.</p>
@@ -519,8 +519,8 @@ app.post('/api/decline-membership', async (req, res) => {
         <div style="font-family: Arial, sans-serif; color: #333; background-color: #f4f4f4; padding: 20px; max-width: 600px; margin: auto; border-radius: 8px; border: 1px solid #ddd;">
           <div style="text-align: center; padding-bottom: 20px;">
             <h1 style="color: #dc3545; margin-bottom: 10px;">Membership Declined</h1>
-            <p style="font-size: 18px; color: #666;">Dear ${memberName},</p>
-            <img src="${profilePicture}" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;"/>
+            <p style="font-size: 18px; color: #666;">Dear ${name},</p>
+            <img src="${photoUrl}" alt="Profile Picture" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;"/>
           </div>
           <div style="padding: 10px 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <p style="margin: 5px 0;">We regret to inform you that your membership application has been declined.</p>
