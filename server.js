@@ -609,23 +609,20 @@ app.post('/api/verified', async (req, res) => {
 });
 
 app.post('/api/unverified', async (req, res) => {
-  const { email, name, reason } = req.body;
+  const { email, name } = req.body;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Email Verification Failed',
+    subject: 'Remove Verification of Account',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
         <h2 style="color: #333;">Dear ${name},</h2>
         <p style="color: #555;">
-          Unfortunately, your email verification attempt has failed. The reason for this failure is as follows:
-        </p>
-        <p style="color: #333; font-size: 16px;">
-          <strong>Reason:</strong> ${reason}
+          Unfortunately, your Account has been removed from Verified account. You lost the advantages of becoming the verified user.
         </p>
         <p style="color: #555;">
-          Please try verifying your email again. If you continue to experience issues, feel free to contact our support team at 
+          If you continue to experience issues, feel free to contact our support team at 
           <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.
         </p>
         <p style="color: #555;">
