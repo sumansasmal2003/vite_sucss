@@ -574,7 +574,7 @@ app.post('/api/verified', async (req, res) => {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
         <h2 style="color: #333;">Dear ${name},</h2>
         <p style="color: #555;">
-          Congratulations! Your email has been successfully verified. As a verified user, you can now enjoy full access to all our features and services.
+          Congratulations! Your Account has been successfully verified. As a verified user, you can now enjoy full access to all our features and services.
         </p>
         <h3 style="color: #333;">Exclusive Advantages for Verified Users:</h3>
         <ul style="color: #555; padding-left: 20px;">
