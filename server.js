@@ -547,7 +547,7 @@ app.post('/api/send-contact-email', (req, res) => {
 
   const mailOptions = {
     from: email,
-    to: process.env.GMAIL_USER,
+    to: process.env.EMAIL_USER,
     subject: `New message from ${name}`,
     text: message,
   };
