@@ -541,6 +541,26 @@ app.post('/api/decline-membership', async (req, res) => {
   }
 });
 
+// API Endpoint to Send Email
+app.post('/api/send-contact-email', (req, res) => {
+  const { name, email, message } = req.body;
+
+  const mailOptions = {
+    from: email,
+    to: process.env.GMAIL_USER,
+    subject: `New message from ${name}`,
+    text: message,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ status: 'fail', message: 'Error sending email' });
+    }
+    console.log('Email sent: ' + info.response);
+    res.status(200).json({ status: 'success', message: 'Email sent successfully' });
+  });
+});
 
 // Helper function to format dates
 function formatDate(date) {
