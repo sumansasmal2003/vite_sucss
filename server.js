@@ -562,6 +562,93 @@ app.post('/api/send-contact-email', (req, res) => {
   });
 });
 
+
+app.post('/api/verified', async (req, res) => {
+  const { email, name } = req.body;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Email Verification Successful - Unlock Exclusive Benefits!',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #333;">Dear ${name},</h2>
+        <p style="color: #555;">
+          Congratulations! Your email has been successfully verified. As a verified user, you can now enjoy full access to all our features and services.
+        </p>
+        <h3 style="color: #333;">Exclusive Advantages for Verified Users:</h3>
+        <ul style="color: #555; padding-left: 20px;">
+          <li style="margin-bottom: 10px;">1. <strong>Extended Participation Window:</strong> You can get an extra day to participate in events even after the deadline date has passed.</li>
+          <li style="margin-bottom: 10px;">2. <strong>Flexible Withdrawal Options:</strong> You can delete your participation up to 2 hours before an event, whereas other users can only withdraw their participation up to 1 day before the event.</li>
+        </ul>
+        <p style="color: #555;">
+          These benefits are our way of saying thank you for verifying your email. Enjoy your enhanced experience!
+        </p>
+        <p style="color: #555;">
+          If you have any questions, please feel free to reach out to us at 
+          <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.
+        </p>
+        <p style="color: #555;">
+          Thank you for verifying your email!
+        </p>
+        <hr style="border: 1px solid #e0e0e0; margin-top: 20px; margin-bottom: 20px;" />
+        <p style="text-align: center; color: #999; font-size: 12px;">
+          © ${new Date().getFullYear()} SUCSS. All rights reserved.
+        </p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Verification success email sent successfully.');
+  } catch (error) {
+    console.error('Error sending verification success email:', error);
+    res.status(500).send('Error sending verification success email.');
+  }
+});
+
+app.post('/api/unverified', async (req, res) => {
+  const { email, name, reason } = req.body;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: 'Email Verification Failed',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+        <h2 style="color: #333;">Dear ${name},</h2>
+        <p style="color: #555;">
+          Unfortunately, your email verification attempt has failed. The reason for this failure is as follows:
+        </p>
+        <p style="color: #333; font-size: 16px;">
+          <strong>Reason:</strong> ${reason}
+        </p>
+        <p style="color: #555;">
+          Please try verifying your email again. If you continue to experience issues, feel free to contact our support team at 
+          <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.
+        </p>
+        <p style="color: #555;">
+          We apologize for the inconvenience.
+        </p>
+        <hr style="border: 1px solid #e0e0e0; margin-top: 20px; margin-bottom: 20px;" />
+        <p style="text-align: center; color: #999; font-size: 12px;">
+          © ${new Date().getFullYear()} SUCSS. All rights reserved.
+        </p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Verification failure email sent successfully.');
+  } catch (error) {
+    console.error('Error sending verification failure email:', error);
+    res.status(500).send('Error sending verification failure email.');
+  }
+});
+
+
 // Helper function to format dates
 function formatDate(date) {
   return new Date(date).toLocaleDateString('en-GB', {
