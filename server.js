@@ -664,51 +664,48 @@ function formatTime(time) {
   });
 }
 
+// Utility function to format collections and spendings into an HTML table
+const formatDetailsAsHtml = (collections, spendings) => {
+  let collectionsTable = '<table border="1" style="width:100%; border-collapse:collapse;"><tr><th>Name</th><th>Rupees</th></tr>';
+  Object.values(collections).forEach((collection) => {
+    collectionsTable += `<tr><td>${collection.name}</td><td>${collection.rupees}</td></tr>`;
+  });
+  collectionsTable += '</table>';
+
+  let spendingsTable = '<table border="1" style="width:100%; border-collapse:collapse;"><tr><th>Item</th><th>Amount</th></tr>';
+  Object.values(spendings).forEach((spending) => {
+    spendingsTable += `<tr><td>${spending.item}</td><td>${spending.amount}</td></tr>`;
+  });
+  spendingsTable += '</table>';
+
+  return `
+    <h2>Collection Details</h2>
+    ${collectionsTable}
+    <br/>
+    <h2>Spending Details</h2>
+    ${spendingsTable}
+  `;
+};
+
+// Endpoint to send collection and spending details via email
 app.post('/api/send-treasure-details', async (req, res) => {
   const { collections, spendings, emails } = req.body;
 
-  const collectionDetails = collections.map(collection => `
-    <div>
-      <h3>${collection.name} - ₹${collection.rupees}</h3>
-      <p>Date: ${collection.date}</p>
-      <h4>Items:</h4>
-      <ul>
-        ${Object.entries(collection.items).map(([item, quantity]) => `<li>${item}: ${quantity}</li>`).join('')}
-      </ul>
-    </div>
-  `).join('');
-
-  const spendingDetails = spendings.map(spending => `
-    <div>
-      <h3>Reason: ${spending.reason} - ₹${spending.amount}</h3>
-      <p>Date: ${spending.date}</p>
-    </div>
-  `).join('');
-
-  const emailContent = `
-    <h2>Treasury Collection and Spending Details</h2>
-    <h3>Collections</h3>
-    ${collectionDetails}
-    <h3>Spendings</h3>
-    ${spendingDetails}
-  `;
-
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: emails.join(', '),
-    subject: 'Treasury Details',
-    html: emailContent,
-  };
-
   try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: emails.join(', '), // Send to all member emails
+      subject: 'Treasury Collection and Spending Details',
+      html: formatDetailsAsHtml(collections, spendings), // Format the details as HTML
+    };
+
     await transporter.sendMail(mailOptions);
-    res.status(200).send('Notifications sent successfully.');
+    res.status(200).send('Details sent successfully!');
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).send('Error sending notifications.');
+    res.status(500).send('Error sending details.');
   }
 });
-
 
 // Start server
 app.listen(port, () => {
