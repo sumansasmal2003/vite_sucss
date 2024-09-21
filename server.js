@@ -664,6 +664,56 @@ function formatTime(time) {
   });
 }
 
+app.post('/api/send-treasure-details', async (req, res) => {
+  const { collections, spendings, emails } = req.body;
+
+  // Prepare email content
+  let htmlContent = `
+    <h1>Treasury Details</h1>
+    <h2>Collections</h2>
+    <table border="1" cellpadding="5">
+      <tr>
+        <th>Name</th>
+        <th>Rupees</th>
+        <th>Date</th>
+      </tr>`;
+  
+  collections.forEach(collection => {
+    htmlContent += `
+      <tr>
+        <td>${collection.name}</td>
+        <td>${collection.rupees}</td>
+        <td>${collection.date}</td>
+      </tr>`;
+  });
+
+  htmlContent += `</table><h2>Spendings</h2><table border="1" cellpadding="5"><tr><th>Amount</th></tr>`;
+  
+  spendings.forEach(spending => {
+    htmlContent += `
+      <tr>
+        <td>${spending.amount}</td>
+      </tr>`;
+  });
+
+  htmlContent += `</table>`;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: emails.join(', '),
+    subject: 'Treasury Collection and Spending Details',
+    html: htmlContent,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).send('Email sent successfully.');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).send('Error sending email.');
+  }
+});
+
 // Start server
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
