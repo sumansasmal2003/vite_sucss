@@ -671,6 +671,7 @@ const formatDetailsAsHtml = (collections, spendings) => {
       <thead>
         <tr style="background-color: #4CAF50; color: white; text-align: left;">
           <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+          <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
           <th style="padding: 10px; border: 1px solid #ddd;">Rupees</th>
         </tr>
       </thead>
@@ -679,7 +680,8 @@ const formatDetailsAsHtml = (collections, spendings) => {
   Object.values(collections).forEach((collection) => {
     collectionsTable += `
       <tr style="border-bottom: 1px solid #ddd;">
-        <td style="padding: 10px; border: 1px solid #ddd;">${collection.date}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">${formatDate(collection.date)}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">${collection.name}</td>
         <td style="padding: 10px; border: 1px solid #ddd;">₹${collection.rupees}</td>
       </tr>`;
   });
@@ -700,7 +702,7 @@ const formatDetailsAsHtml = (collections, spendings) => {
   Object.values(spendings).forEach((spending) => {
     spendingsTable += `
       <tr style="border-bottom: 1px solid #ddd;">
-        <td style="padding: 10px; border: 1px solid #ddd;">${spending.date}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">${formatDate(spending.date)}</td>
         <td style="padding: 10px; border: 1px solid #ddd;">${spending.reason}</td>
         <td style="padding: 10px; border: 1px solid #ddd;">₹${spending.amount}</td>
       </tr>`;
