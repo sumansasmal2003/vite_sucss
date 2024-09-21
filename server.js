@@ -667,52 +667,48 @@ function formatTime(time) {
 app.post('/api/send-treasure-details', async (req, res) => {
   const { collections, spendings, emails } = req.body;
 
-  // Prepare email content
-  let htmlContent = `
-    <h1>Treasury Details</h1>
-    <h2>Collections</h2>
-    <table border="1" cellpadding="5">
-      <tr>
-        <th>Name</th>
-        <th>Rupees</th>
-        <th>Date</th>
-      </tr>`;
-  
-  collections.forEach(collection => {
-    htmlContent += `
-      <tr>
-        <td>${collection.name}</td>
-        <td>${collection.rupees}</td>
-        <td>${collection.date}</td>
-      </tr>`;
-  });
+  const collectionDetails = collections.map(collection => `
+    <div>
+      <h3>${collection.name} - ₹${collection.rupees}</h3>
+      <p>Date: ${collection.date}</p>
+      <h4>Items:</h4>
+      <ul>
+        ${Object.entries(collection.items).map(([item, quantity]) => `<li>${item}: ${quantity}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
 
-  htmlContent += `</table><h2>Spendings</h2><table border="1" cellpadding="5"><tr><th>Amount</th></tr>`;
-  
-  spendings.forEach(spending => {
-    htmlContent += `
-      <tr>
-        <td>${spending.amount}</td>
-      </tr>`;
-  });
+  const spendingDetails = spendings.map(spending => `
+    <div>
+      <h3>Reason: ${spending.reason} - ₹${spending.amount}</h3>
+      <p>Date: ${spending.date}</p>
+    </div>
+  `).join('');
 
-  htmlContent += `</table>`;
+  const emailContent = `
+    <h2>Treasury Collection and Spending Details</h2>
+    <h3>Collections</h3>
+    ${collectionDetails}
+    <h3>Spendings</h3>
+    ${spendingDetails}
+  `;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: emails.join(', '),
-    subject: 'Treasury Collection and Spending Details',
-    html: htmlContent,
+    subject: 'Treasury Details',
+    html: emailContent,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    res.status(200).send('Email sent successfully.');
+    res.status(200).send('Notifications sent successfully.');
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).send('Error sending email.');
+    res.status(500).send('Error sending notifications.');
   }
 });
+
 
 // Start server
 app.listen(port, () => {
