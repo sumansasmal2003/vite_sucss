@@ -664,26 +664,65 @@ function formatTime(time) {
   });
 }
 
-// Utility function to format collections and spendings into an HTML table
+// Function to format collections and spendings into an HTML email
 const formatDetailsAsHtml = (collections, spendings) => {
-  let collectionsTable = '<table border="1" style="width:100%; border-collapse:collapse;"><tr><th>Name</th><th>Rupees</th></tr>';
-  Object.values(collections).forEach((collection) => {
-    collectionsTable += `<tr><td>${collection.name}</td><td>${collection.rupees}</td></tr>`;
-  });
-  collectionsTable += '</table>';
+  let collectionsTable = `
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+      <thead>
+        <tr style="background-color: #4CAF50; color: white; text-align: left;">
+          <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+          <th style="padding: 10px; border: 1px solid #ddd;">Rupees</th>
+        </tr>
+      </thead>
+      <tbody>`;
 
-  let spendingsTable = '<table border="1" style="width:100%; border-collapse:collapse;"><tr><th>Item</th><th>Amount</th></tr>';
-  Object.values(spendings).forEach((spending) => {
-    spendingsTable += `<tr><td>${spending.item}</td><td>${spending.amount}</td></tr>`;
+  Object.values(collections).forEach((collection) => {
+    collectionsTable += `
+      <tr style="border-bottom: 1px solid #ddd;">
+        <td style="padding: 10px; border: 1px solid #ddd;">${collection.date}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">₹${collection.rupees}</td>
+      </tr>`;
   });
-  spendingsTable += '</table>';
+
+  collectionsTable += '</tbody></table>';
+
+  let spendingsTable = `
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background-color: #f44336; color: white; text-align: left;">
+          <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+          <th style="padding: 10px; border: 1px solid #ddd;">Reason</th>
+          <th style="padding: 10px; border: 1px solid #ddd;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  Object.values(spendings).forEach((spending) => {
+    spendingsTable += `
+      <tr style="border-bottom: 1px solid #ddd;">
+        <td style="padding: 10px; border: 1px solid #ddd;">${spending.date}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">${spending.reason}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">₹${spending.amount}</td>
+      </tr>`;
+  });
+
+  spendingsTable += '</tbody></table>';
 
   return `
-    <h2>Collection Details</h2>
-    ${collectionsTable}
-    <br/>
-    <h2>Spending Details</h2>
-    ${spendingsTable}
+    <div style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px; border-radius: 8px; max-width: 800px; margin: auto;">
+      <h1 style="color: #ff6600; text-align: center;">Treasury Collection and Spending Details</h1>
+
+      <h2 style="color: #4CAF50;">Collection Details</h2>
+      ${collectionsTable}
+
+      <h2 style="color: #f44336;">Spending Details</h2>
+      ${spendingsTable}
+
+      <div style="text-align: center; margin-top: 30px;">
+        <p style="font-size: 14px; color: #666;">For any questions, please contact us at <a href="mailto:sijgeriaucssangha@gmail.com" style="color: #ff6600;">sijgeriaucssangha@gmail.com</a>.</p>
+        <p style="font-size: 12px; color: #999;">This email was automatically generated. Please do not reply to this email.</p>
+      </div>
+    </div>
   `;
 };
 
